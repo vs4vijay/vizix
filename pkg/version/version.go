@@ -20,10 +20,10 @@ func (v *Version) FormatVersion(short bool) string {
 }
 
 var (
-	Release = "canary"
+	Release       = "canary"
 	BuildMetadata = ""
-	GitCommit = ""
-	GitTreeState = ""
+	GitCommit     = ""
+	GitTreeState  = ""
 )
 
 func getVersion() string {
