@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math/rand"
 	"net"
+	"os"
 	"strings"
 	"time"
 )
@@ -26,24 +27,37 @@ func Start(port string) {
 			fmt.Println("Error in accepting connection", err)
 			return
 		}
-		handleConnection(connection)
+		go handleConnection(connection)
 	}
 }
 
 func handleConnection(connection net.Conn) {
 	client := connection.RemoteAddr().String()
-	fmt.Printf("Client Connected %s", client)
+	fmt.Printf("Client Connected %s\n", client)
+
+	connection.Write([]byte(welcomeMessage()))
 
 	for {
-		netData, err := bufio.NewReader(connection).ReadString('\n')
+		clientData, err := bufio.NewReader(connection).ReadString('\n')
 		if err != nil {
-			fmt.Println("Error in reading data", err)
+			fmt.Println("Error in reading from client", err)
 		}
 
-		data := strings.TrimSpace(netData)
+		cData := strings.TrimSpace(clientData)
 
-		fmt.Printf("[%s] %s\n", client, data)
-		connection.Write([]byte("VIZIX\n"))
+		serverData, err := bufio.NewReader(os.Stdin).ReadString('\n')
+		if err != nil {
+			fmt.Println("Error in reading input", err)
+		}
+
+		sData := strings.TrimSpace(serverData)
+
+		fmt.Printf("[%s] %s\n", client, string(cData))
+		connection.Write([]byte(sData))
 	}
 	connection.Close()
+}
+
+func welcomeMessage() string {
+	return "Welcome to VIZIX\n"
 }
