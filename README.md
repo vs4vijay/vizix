@@ -32,4 +32,11 @@ go build
 
 ~/go/bin/cobra add list
 
+
+gofmt
+golint
+go vet
+
+git config core.hooksPath .githooks
+
 ```
