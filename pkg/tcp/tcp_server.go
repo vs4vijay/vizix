@@ -3,6 +3,7 @@ package tcp
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"math/rand"
 	"net"
 	"os"
@@ -28,18 +29,25 @@ func Start(port string) {
 			return
 		}
 		go handleServerConnection(connection)
+		//c := make(chan os.Signal)
+		//signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+		//<-c
 	}
 }
 
 func handleServerConnection(connection net.Conn) {
 	client := connection.RemoteAddr().String()
-	fmt.Printf("Client Connected %s\n", client)
+	fmt.Printf("[%s] +Connected\n", client)
 
 	connection.Write([]byte(welcomeMessage()))
 
 	for {
 		clientData, err := bufio.NewReader(connection).ReadString('\n')
-		if err != nil {
+
+		if err == io.EOF {
+			fmt.Printf("[%s] -Disconnected\n", client)
+			break
+		} else if err != nil {
 			fmt.Println("Error in reading from client", err)
 		}
 
@@ -52,8 +60,10 @@ func handleServerConnection(connection net.Conn) {
 
 		sData := strings.TrimSpace(serverData)
 
-		fmt.Printf("[%s] %s\n", client, string(cData))
-		connection.Write([]byte(sData))
+		if len(sData) != 0 {
+			fmt.Printf("[%s] %s\n", client, string(cData))
+			connection.Write([]byte(sData))
+		}
 	}
 	connection.Close()
 }

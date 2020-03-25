@@ -24,6 +24,8 @@ includes following suite of tests.
 ### Development Notes
 ```
 
+Commands:
+
 ~/go/bin/cobra init --pkg-name github.com/vs4vijay/vizix
 
 go mod init github.com/vs4vijay/vizix
@@ -34,14 +36,24 @@ go build
 
 createCmd.MarkFlagRequired("secret")
 
+
+Logging:
+
 log.SetFormatter(&log.TextFormatter{ForceColors: true})
 log.SetOutput(colorable.NewColorableStdout())
+
+
+Linting:
 
 gofmt
 golint
 go vet
 
+
+Git Hooks:
+
 git config core.hooksPath .
+
 
 Makefile:
 
@@ -54,12 +66,34 @@ tools:
 	go get github.com/tools/godep
 	go get github.com/mitchellh/gox
 
+
 Bash:
 
 yell() { echo "FAILED> $*" >&2; }
 die() { yell "$*"; exit 1; }
 try() { "$@" || die "failed executing: $*"; }
 log() { echo "--> $*"; }
+
+
+Channels:
+
+bye := make(chan os.Signal, 1)
+signal.Notify(bye, os.Interrupt, syscall.SIGTERM)
+<-bye
+
+
+Context:
+
+ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+
+
+Mutex:
+
+var mutex *sync.Mutex
+
+users.mutex.Lock()
+defer users.mutex.Unlock()
+append(users, user)
 
 
 ```
