@@ -1,4 +1,4 @@
-package tcp_server
+package tcp
 
 import (
 	"bufio"
@@ -27,11 +27,11 @@ func Start(port string) {
 			fmt.Println("Error in accepting connection", err)
 			return
 		}
-		go handleConnection(connection)
+		go handleServerConnection(connection)
 	}
 }
 
-func handleConnection(connection net.Conn) {
+func handleServerConnection(connection net.Conn) {
 	client := connection.RemoteAddr().String()
 	fmt.Printf("Client Connected %s\n", client)
 

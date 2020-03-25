@@ -2,12 +2,12 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/vs4vijay/vizix/pkg/tcp_server"
+	"github.com/vs4vijay/vizix/pkg/tcp"
 
 	"github.com/spf13/cobra"
 )
 
-var port, serverType string
+var listenPort, serverType string
 
 // CHECK: why &server.port can't be used
 //type server struct {
@@ -17,8 +17,8 @@ var port, serverType string
 var serverCmd = &cobra.Command{
 	Use: "server",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Starting server on port", port)
-		tcp_server.Start(port)
+		fmt.Println("Starting server on port", listenPort)
+		tcp.Start(listenPort)
 	},
 }
 
@@ -27,6 +27,6 @@ func init() {
 
 	flags := serverCmd.Flags()
 	flags.StringVarP(&serverType, "type", "t", "tcp", "server type (tcp, udp)")
-	flags.StringVarP(&port, "port", "p", "9999", "port number to listen")
-	// CHECK: make "port" no. required
+	flags.StringVarP(&listenPort, "port", "p", "", "port number to listen")
+	cobra.MarkFlagRequired(flags, "port")
 }
