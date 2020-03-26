@@ -21,7 +21,7 @@ var apiCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(apiCmd)
+	RootCmd.AddCommand(apiCmd)
 
 	flags := apiCmd.Flags()
 	flags.StringVarP(&apiPort, "port", "p", "", "port number to listen")

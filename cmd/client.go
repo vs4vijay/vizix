@@ -21,7 +21,7 @@ var clientCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(clientCmd)
+	RootCmd.AddCommand(clientCmd)
 
 	flags := clientCmd.Flags()
 	flags.StringVarP(&serverHost, "host", "H", "", "remote host address")

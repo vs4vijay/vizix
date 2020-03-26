@@ -14,7 +14,7 @@ var (
 	verbosity int
 )
 
-var rootCmd = &cobra.Command{
+var RootCmd = &cobra.Command{
 	Use: "vizix",
 	Run: func(cmd *cobra.Command, args []string) {
 		initLogger(verbosity)
@@ -22,17 +22,21 @@ var rootCmd = &cobra.Command{
 	},
 }
 
-func Execute() {
-	if err := rootCmd.Execute(); err != nil {
-		log.Error(err)
-		os.Exit(1)
-	}
-}
+//func New() *cobra.Command {
+//	rootCmd := &cobra.Command{
+//		Use: "vizix",
+//		Run: func(cmd *cobra.Command, args []string) {
+//			initLogger(verbosity)
+//			cmd.HelpFunc()(cmd, args)
+//		},
+//	}
+//	return rootCmd
+//}
 
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	pFlags := rootCmd.PersistentFlags()
+	pFlags := RootCmd.PersistentFlags()
 	pFlags.StringVar(&cfgFile, "config", "", "config file (default is $HOME/.vizix.yaml)")
 	pFlags.CountVarP(&verbosity, "verbosity", "v", "set verbosity level")
 }

@@ -23,7 +23,7 @@ var serverCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(serverCmd)
+	RootCmd.AddCommand(serverCmd)
 
 	flags := serverCmd.Flags()
 	flags.StringVarP(&serverType, "type", "t", "tcp", "server type (tcp, udp)")

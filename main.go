@@ -1,7 +1,15 @@
 package main
 
-import "github.com/vs4vijay/vizix/cmd"
+import (
+	"os"
+
+	log "github.com/sirupsen/logrus"
+	"github.com/vs4vijay/vizix/cmd"
+)
 
 func main() {
-	cmd.Execute()
+	if err := cmd.RootCmd.Execute(); err != nil {
+		log.Error(err)
+		os.Exit(1)
+	}
 }
