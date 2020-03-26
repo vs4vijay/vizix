@@ -36,7 +36,7 @@ createCmd.MarkFlagRequired("secret")
 log.SetFormatter(&log.TextFormatter{ForceColors: true})
 log.SetOutput(colorable.NewColorableStdout())
 ```
-- Log Verbosity: cmd.PersistentFlags().CountVarP(&verbosity, "verbosity", "v", "set verbosity")
+- Log Verbosity: `cmd.PersistentFlags().CountVarP(&verbosity, "verbosity", "v", "set verbosity")`
 
 
 ### Linting
@@ -48,7 +48,7 @@ log.SetOutput(colorable.NewColorableStdout())
 
 
 ### Git Hooks
-```
+```bash
 git config core.hooksPath .
 ```
 
@@ -65,19 +65,19 @@ tools:
 ```
 
 ### Channels
-```
+```golang
 bye := make(chan os.Signal, 1)
 signal.Notify(bye, os.Interrupt, syscall.SIGTERM)
 <-bye
 ```
 
 ### Context
-```
+```golang
 ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 ```
 
 ### Mutex
-```
+```golang
 var mutex *sync.Mutex
 
 users.mutex.Lock()
@@ -92,12 +92,12 @@ includes following suite of tests.
 - `make test`: runs all of the above
 
 ### JSON
-```
+```golang
 json.NewEncoder(writer).Encode(todos)
 ```
 
 ### System Exec
-```
+```golang
 out, err := exec.Command("ls").Output()
 ```
 
@@ -112,11 +112,13 @@ out, err := exec.Command("ls").Output()
 - `chi` - lightweight, compatible net.Http
 - `mux` - 
 - `gin` - 
+- `iris` -
+- `echo` - 
 
 
 #### Using net/http:
 
-```
+```golang
 http.Handle("/", server) // or http.HandleFunc("/", someFunc)
 http.ListenAndServe(address, nil)
 ```
@@ -124,7 +126,7 @@ http.ListenAndServe(address, nil)
 
 #### Using Mux: 
 
-```
+```golang
 router := mux.NewRouter()
 router.HandleFunc("/", Index)
 http.ListenAndServe(address, router)
@@ -132,10 +134,18 @@ http.ListenAndServe(address, router)
 - To get params - `mux.Vars(request)`
 
 ### Bash:
-```yell() { echo "FAILED> $*" >&2; }
+```bash
+yell() { echo "FAILED> $*" >&2; }
 die() { yell "$*"; exit 1; }
 try() { "$@" || die "failed executing: $*"; }
 log() { echo "--> $*"; }
+```
+
+### Dockerization:
+
+```bash
+docker build -t vs4vijay/vizix .
+docker run vs4vijay/vizix
 ```
 
 ---

@@ -13,10 +13,7 @@ var apiCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		initLogger(verbosity)
 		log.Info("Starting API Server on port ", apiPort)
-		server := &api.Server{
-			Port: apiPort,
-		}
-		server.Start()
+		api.Start(apiPort)
 	},
 }
 

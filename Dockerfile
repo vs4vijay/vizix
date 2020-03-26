@@ -3,11 +3,11 @@ FROM golang:1.14.0-alpine AS builder
 
 WORKDIR /app/src
 
-COPY go.mod go.sum .
+COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
-RUN go build -o /app/bin/ .
+RUN go build -o /app/bin/vizix .
 
 
 # Deploy stage
@@ -19,6 +19,7 @@ RUN apk add --no-cache ca-certificates
 
 COPY --from=builder /app/bin/vizix .
 
-EXPOSE 9999
+EXPOSE 8888
 
-ENTRYPOINT ["/app/bin/vizix"]
+ENTRYPOINT ["./vizix"]
+CMD ["api", "--port", "8888"]

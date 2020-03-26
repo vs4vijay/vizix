@@ -2,21 +2,30 @@ package api
 
 import (
 	"fmt"
-	"net/http"
+	iris "github.com/kataras/iris/v12"
+	"github.com/kataras/iris/v12/middleware/logger"
+	"github.com/kataras/iris/v12/middleware/recover"
 )
 
-type Server struct {
-	Port string
-}
+func Start(port string) {
+	address := fmt.Sprintf(":%s", port)
+	app := iris.New()
+	app.Logger().SetLevel("debug")
 
-func (server *Server) ServeHTTP(writer http.ResponseWriter, request *http.Request)  {
-	writer.Header().Set("Content-Type", "application/json")
-	writer.WriteHeader(http.StatusOK)
-	writer.Write([]byte(`{"message": "Welcome to VIZIX"}`))
-}
+	app.Use(recover.New())
+	app.Use(logger.New())
 
-func (server *Server) Start()  {
-	address := fmt.Sprintf(":%s", server.Port)
-	http.Handle("/", server)
-	http.ListenAndServe(address, nil)
+	app.Handle("GET", "/", func(ctx iris.Context) {
+		ctx.HTML("<h1>Welcome to Vizix</h1>")
+	})
+
+	app.Get("/ping", func(ctx iris.Context) {
+		ctx.WriteString("pong")
+	})
+
+	app.Get("/health-check", func(ctx iris.Context) {
+		ctx.JSON(iris.Map{"success": true})
+	})
+
+	app.Run(iris.Addr(address), iris.WithoutServerError(iris.ErrServerClosed))
 }
