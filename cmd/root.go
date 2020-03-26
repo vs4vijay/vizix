@@ -1,26 +1,30 @@
 package cmd
 
 import (
-	"fmt"
-	"github.com/spf13/cobra"
 	"os"
 
 	homedir "github.com/mitchellh/go-homedir"
+	log "github.com/sirupsen/logrus"
+	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
-var cfgFile string
+var (
+	cfgFile   string
+	verbosity int
+)
 
-// rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "vizix",
+	Use: "vizix",
+	Run: func(cmd *cobra.Command, args []string) {
+		initLogger(verbosity)
+		cmd.HelpFunc()(cmd, args)
+	},
 }
 
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
+		log.Error(err)
 		os.Exit(1)
 	}
 }
@@ -28,39 +32,38 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
-
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.vizix.yaml)")
-
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	pFlags := rootCmd.PersistentFlags()
+	pFlags.StringVar(&cfgFile, "config", "", "config file (default is $HOME/.vizix.yaml)")
+	pFlags.CountVarP(&verbosity, "verbosity", "v", "set verbosity level")
 }
 
-// initConfig reads in config file and ENV variables if set.
 func initConfig() {
 	if cfgFile != "" {
-		// Use config file from the flag.
 		viper.SetConfigFile(cfgFile)
 	} else {
-		// Find home directory.
 		home, err := homedir.Dir()
 		if err != nil {
-			fmt.Println(err)
+			log.Error(err)
 			os.Exit(1)
 		}
-
-		// Search config in home directory with name ".vizix" (without extension).
 		viper.AddConfigPath(home)
 		viper.SetConfigName(".vizix")
 	}
 
-	viper.AutomaticEnv() // read in environment variables that match
+	viper.AutomaticEnv()
 
-	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
-		fmt.Println("Using config file:", viper.ConfigFileUsed())
+		log.Info("Using config file:", viper.ConfigFileUsed())
+	}
+}
+
+func initLogger(verbosity int) {
+	switch {
+	case verbosity == 1:
+		log.SetLevel(log.DebugLevel)
+	case verbosity > 1:
+		log.SetLevel(log.TraceLevel)
+	default:
+		log.SetLevel(log.InfoLevel)
 	}
 }

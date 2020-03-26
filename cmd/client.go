@@ -2,9 +2,10 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/vs4vijay/vizix/pkg/tcp"
 
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
+	"github.com/vs4vijay/vizix/pkg/tcp"
 )
 
 var serverHost, serverPort string
@@ -12,8 +13,9 @@ var serverHost, serverPort string
 var clientCmd = &cobra.Command{
 	Use: "client",
 	Run: func(cmd *cobra.Command, args []string) {
+		initLogger(verbosity)
 		address := fmt.Sprintf("%s:%s", serverHost, serverPort)
-		fmt.Println("Connecting to server", address)
+		log.Info("Connecting to server", address)
 		tcp.Connect(address)
 	},
 }

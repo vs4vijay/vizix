@@ -1,10 +1,9 @@
 package cmd
 
 import (
-	"fmt"
-	"github.com/vs4vijay/vizix/pkg/tcp"
-
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
+	"github.com/vs4vijay/vizix/pkg/tcp"
 )
 
 var listenPort, serverType string
@@ -17,7 +16,8 @@ var listenPort, serverType string
 var serverCmd = &cobra.Command{
 	Use: "server",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Starting server on port", listenPort)
+		initLogger(verbosity)
+		log.Info("Starting server on port ", listenPort)
 		tcp.Start(listenPort)
 	},
 }

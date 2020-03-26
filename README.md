@@ -10,18 +10,16 @@ go get github.com/vs4vijay/vizix
 
 ## Development
 
----
+```console
 
-## Testing
+go run main.go
 
-includes following suite of tests.
-- `make test-lint`: runs linter/style checks
-- `make test-unit`: runs basic unit tests
-- `make test`: runs all of the above
+```
 
 ---
 
 ### Development Notes
+
 ```
 
 Commands:
@@ -41,6 +39,8 @@ Logging:
 
 log.SetFormatter(&log.TextFormatter{ForceColors: true})
 log.SetOutput(colorable.NewColorableStdout())
+
+- Log Verbosity: cmd.PersistentFlags().CountVarP(&verbosity, "verbosity", "v", "set verbosity")
 
 
 Linting:
@@ -94,6 +94,31 @@ var mutex *sync.Mutex
 users.mutex.Lock()
 defer users.mutex.Unlock()
 append(users, user)
+
+
+Testing:
+
+includes following suite of tests.
+- `make test-lint`: runs linter/style checks
+- `make test-unit`: runs basic unit tests
+- `make test`: runs all of the above
+
+
+System Exec:
+
+out, err := exec.Command("ls").Output()
+
+
+OS Detection:
+
+runtime.GOOS == "windows"
+
+
+APIs:
+
+- net/http - Native Implementation
+- chi - lightweight, compatible net.Http
+- mux - 
 
 
 ```
