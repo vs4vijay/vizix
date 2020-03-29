@@ -1,15 +1,15 @@
 PROJECT 	:= "vizix"
-VERSION 	:= 0.0.1
+VERSION 	:= 0.0.0
 
 GIT_COMMIT 	:= `git rev-parse HEAD`
 GIT_SHA 	:= `git rev-parse --short HEAD`
 GIT_TAG 	:= `git describe --tags --abbrev=0 --exact-match 2>/dev/null || echo "canary"`
-GIT_STATE	:= $(shell test -n "`git status --porcelain`" && echo "dirty" || echo "clean")
+BUILD_TIME  := `date`
 
 LDFLAGS := ""
-LDFLAGS += -X=github.com/vs4vijay/vizix/pkg/version.Release=$(VERSION)
+LDFLAGS += -X=github.com/vs4vijay/vizix/pkg/version.SemVer=$(GIT_TAG)
 LDFLAGS += -X=github.com/vs4vijay/vizix/pkg/version.GitCommit=$(GIT_COMMIT)
-LDFLAGS += -X=github.com/vs4vijay/vizix/pkg/version.GitTreeState=$(GIT_STATE)
+LDFLAGS += -X=github.com/vs4vijay/vizix/pkg/version.BuildTime=$(BUILD_TIME)
 
 OS 			:= `uname`
 OS_LIST		:= darwin freebsd linux openbsd
@@ -23,11 +23,10 @@ default: info
 
 info:
 	@echo "info..."
-	@echo "Version:       		${VERSION}"
+	@echo "Version:       		${GIT_TAG}"
 	@echo "Git Commit:       	${GIT_COMMIT}"
 	@echo "Git SHA:       		${GIT_SHA}"
-	@echo "Git Tag:       		${GIT_TAG}"
-	@echo "Git State:       	${GIT_STATE}"
+	@echo "Build Time:       	${BUILD_TIME}"
 
 fmt:
 	gofmt -l -w .
@@ -37,6 +36,9 @@ build: info
 
 release-dry-run:
 	goreleaser --snapshot --skip-publish --rm-dist
+
+release-using-gorelease:
+	goreleaser --rm-dist
 
 clean:
 	@echo "cleaning..."

@@ -189,12 +189,20 @@ on:
       - "v*.*.*"
 ```
 
+- Brew formula
+  - Repo: `vs4vijay/homebrew-vizix`
+```shell script
+brew install vizix
+brew info vizix
+```
+
 - Manual Build
 ```shell script
 GOOS=darwin GOARCH=amd64 packr build
 GOOS=linux GOARCH=amd64 packr build
 GOOS=windows GOARCH=386 packr build
 ```
+
 
 
 
