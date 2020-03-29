@@ -1,9 +1,12 @@
 before:
   hooks:
     - go mod download
+
 builds:
 - env:
   - CGO_ENABLED=0
+  ldflags:
+    - -s -w -X github.com/vs4vijay/vizix/pkg/version.version={{.Version}} -X=github.com/vs4vijay/vizix/pkg/version.GitCommit={{.Commit}} -X github.com/vs4vijay/vizix/pkg/version.BuildDate={{.Date}}
 
 brews:
   - name: vizix
@@ -12,29 +15,16 @@ brews:
       owner: vs4vijay
       name: homebrew-vizix
     url_template: "https://github.com/vs4vijay/vizix/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
-    # Example: https://docs.brew.sh/Formula-Cookbook#specifying-the-download-strategy-explicitly
-    # Default is empty.
-    download_strategy: CurlDownloadStrategy
-    custom_require: custom_download_strategy
     commit_author:
-      name: goreleaserbot
-      email: goreleaser@carlosbecker.com
+      name: vs4vijay
+      email: vs4vijay@gmail.com
     folder: Formula
-
-    # Caveats for the user of your binary.
-    # Default is empty.
-#    caveats: "How to use this binary"
-
-    description: "vizix - Software to create fast and easy drum rolls."
-    skip_upload: true
-
-    # So you can `brew test` your formula.
-    # Default is empty.
-    test: |
-      system "#{bin}/program --version"
-
+    description: "vizix - Software to create fun and profit"
+    skip_upload: false
     install: |
-      bin.install "program"
+      bin.install "vizix"
+    test: |
+      system "#{bin}/vizix --version"
 
 archives:
 - replacements:
@@ -43,10 +33,13 @@ archives:
     windows: Windows
     386: i386
     amd64: x86_64
+
 checksum:
   name_template: 'checksums.txt'
+
 snapshot:
   name_template: "{{ .Tag }}-next"
+
 changelog:
   sort: asc
   filters:

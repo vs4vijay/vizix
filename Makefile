@@ -35,5 +35,8 @@ fmt:
 build: info
 	go build -v -ldflags "$(LDFLAGS)"
 
+release-dry-run:
+	goreleaser --snapshot --skip-publish --rm-dist
+
 clean:
 	@echo "cleaning..."
