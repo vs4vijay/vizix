@@ -4,6 +4,38 @@ before:
 builds:
 - env:
   - CGO_ENABLED=0
+
+brews:
+  - name: vizix
+    goarm: 6
+    github:
+      owner: vs4vijay
+      name: homebrew-vizix
+    url_template: "https://github.com/vs4vijay/vizix/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+    # Example: https://docs.brew.sh/Formula-Cookbook#specifying-the-download-strategy-explicitly
+    # Default is empty.
+    download_strategy: CurlDownloadStrategy
+    custom_require: custom_download_strategy
+    commit_author:
+      name: goreleaserbot
+      email: goreleaser@carlosbecker.com
+    folder: Formula
+
+    # Caveats for the user of your binary.
+    # Default is empty.
+#    caveats: "How to use this binary"
+
+    description: "vizix - Software to create fast and easy drum rolls."
+    skip_upload: true
+
+    # So you can `brew test` your formula.
+    # Default is empty.
+    test: |
+      system "#{bin}/program --version"
+
+    install: |
+      bin.install "program"
+
 archives:
 - replacements:
     darwin: Darwin

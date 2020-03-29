@@ -178,13 +178,23 @@ docker volume prune
   - `brew install goreleaser/tap/goreleaser`
   - `goreleaser init`
   - Test: `goreleaser --snapshot --skip-publish --rm-dist`
+  - CI/CD with Github Actions:
+```yaml
+name: Release with goreleaser
+on:
+  push:
+    branches:
+      - "!*"
+    tags:
+      - "v*.*.*"
+```
 
-```console
+- Manual Build
+```shell script
 GOOS=darwin GOARCH=amd64 packr build
 GOOS=linux GOARCH=amd64 packr build
 GOOS=windows GOARCH=386 packr build
 ```
-
 
 
 
