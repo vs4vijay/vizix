@@ -74,6 +74,9 @@ signal.Notify(bye, os.Interrupt, syscall.SIGTERM)
 ### Context
 ```golang
 ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+OR
+ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+defer cancel()
 ```
 
 ### Mutex
@@ -147,6 +150,43 @@ log() { echo "--> $*"; }
 docker build -t vs4vijay/vizix .
 docker run vs4vijay/vizix
 ```
+
+- Cleanup:
+```console
+docker container prune
+docker image prune
+docker network prune
+docker volume prune
+```
+
+- List Dangling Images: `docker images -f dangling=true`
+  - `docker rmi $(docker images --filter "dangling=true" -q --no-trunc)`
+- Remove Volumes of Dangling Images: `docker volume rm $(docker volume ls -qf dangling=true)`
+- Remove Containers: `docker rm $(docker ps -qa --no-trunc --filter "status=exited")`
+- Remove Everything: `docker system prune -a --volumes`
+- Kill All Running Containers: `docker kill $(docker ps -q)`
+- 
+
+
+### Build and Distribute
+
+- Create git tag
+  - `git tag -a v0.1.0 -m "First release"`
+  - `git push origin v0.1.0`
+  
+- Go Releaser
+  - `brew install goreleaser/tap/goreleaser`
+  - `goreleaser init`
+  - Test: `goreleaser --snapshot --skip-publish --rm-dist`
+
+```console
+GOOS=darwin GOARCH=amd64 packr build
+GOOS=linux GOARCH=amd64 packr build
+GOOS=windows GOARCH=386 packr build
+```
+
+
+
 
 ---
 
