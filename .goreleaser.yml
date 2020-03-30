@@ -40,13 +40,13 @@ nfpms:
       - deb
       - rpm
 
-snapcrafts:
-  - name_template: "{{ .ProjectName }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
-    summary: "vizix"
-    description: "vizix - Software for fun and profit"
-    grade: stable
-    confinement: classic
-    publish: true
+#snapcrafts:
+#  - name_template: "{{ .ProjectName }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
+#    summary: "vizix"
+#    description: "vizix - Software for fun and profit"
+#    grade: stable
+#    confinement: classic
+#    publish: true
 
 archives:
 - replacements:
