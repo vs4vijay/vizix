@@ -11,15 +11,13 @@ go get github.com/vs4vijay/vizix
 ## Development
 
 ```console
-
 go run main.go
-
 ```
 
 ---
 
 ### Commands
-```
+```bash
 ~/go/bin/cobra init --pkg-name github.com/vs4vijay/vizix
 
 go mod init github.com/vs4vijay/vizix
@@ -32,7 +30,7 @@ createCmd.MarkFlagRequired("secret")
 ```
 
 ### Logging
-```
+```golang
 log.SetFormatter(&log.TextFormatter{ForceColors: true})
 log.SetOutput(colorable.NewColorableStdout())
 ```
@@ -53,7 +51,7 @@ git config core.hooksPath .
 ```
 
 ### Makefile
-```
+```bash
 tools:
 	go get golang.org/x/tools/cmd/goimports
 	go get github.com/kisielk/errcheck
@@ -165,10 +163,15 @@ docker volume prune
 - Remove Containers: `docker rm $(docker ps -qa --no-trunc --filter "status=exited")`
 - Remove Everything: `docker system prune -a --volumes`
 - Kill All Running Containers: `docker kill $(docker ps -q)`
-- 
-
 
 ### Build and Distribute
+
+- Manual Build
+```console
+GOOS=darwin GOARCH=amd64 go build
+GOOS=linux GOARCH=amd64 go build
+GOOS=windows GOARCH=386 go build
+```
 
 - Create git tag
   - `git tag -a v0.1.0 -m "First release"`
@@ -178,30 +181,49 @@ docker volume prune
   - `brew install goreleaser/tap/goreleaser`
   - `goreleaser init`
   - Test: `goreleaser --snapshot --skip-publish --rm-dist`
+  - Release: `goreleaser --rm-dist`
   - CI/CD with Github Actions:
 ```yaml
-name: Release with goreleaser
+name: Release
+
 on:
   push:
-    branches:
-      - "!*"
     tags:
       - "v*.*.*"
+
+jobs:
+  goreleaser:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v2
+      -
+        name: Unshallow
+        run: git fetch --prune --unshallow
+      -
+        name: Set up Go
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.14.x
+      -
+        name: GoReleaser Action
+        uses: goreleaser/goreleaser-action@v1.3.1
+        with:
+          version: latest
+          args: release --rm-dist
+        env:
+          GITHUB_TOKEN: ${{ secrets.GORELEASER_TOKEN }}
 ```
 
 - Brew formula
-  - Repo: `vs4vijay/homebrew-vizix`
-```shell script
+  - Repo: [vs4vijay/homebrew-vizix](https://github.com/vs4vijay/homebrew-vizix)
+```bash
 brew install vizix
 brew info vizix
 brew reinstall vizix --force
-```
-
-- Manual Build
-```shell script
-GOOS=darwin GOARCH=amd64 packr build
-GOOS=linux GOARCH=amd64 packr build
-GOOS=windows GOARCH=386 packr build
+brew update
+brew upgrade vizix
 ```
 
 

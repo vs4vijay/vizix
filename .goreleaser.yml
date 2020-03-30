@@ -19,12 +19,16 @@ brews:
       name: vs4vijay
       email: vs4vijay@gmail.com
     folder: Formula
-    description: "vizix - Software to create fun and profit"
+    description: "vizix - Software for fun and profit"
     skip_upload: false
+    goos:
+      - darwin
+      - linux
+      - windows
     install: |
       bin.install "vizix"
     test: |
-      system "#{bin}/vizix --version"
+      system "#{bin}/vizix version"
 
 archives:
 - replacements:
