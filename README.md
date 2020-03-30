@@ -173,9 +173,10 @@ GOOS=linux GOARCH=amd64 go build
 GOOS=windows GOARCH=386 go build
 ```
 
-- Create git tag
-  - `git tag -a v0.1.0 -m "First release"`
-  - `git push origin v0.1.0`
+- Git tags
+  - Create Tag: `git tag -a v0.0.0 -m "Initial release"`
+  - Push Tag: `git push origin v0.0.0`
+  - Delete Tag: `git push origin :v0.0.1`
   
 - Go Releaser
   - `brew install goreleaser/tap/goreleaser`

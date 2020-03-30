@@ -7,6 +7,10 @@ builds:
   - CGO_ENABLED=0
   ldflags:
     - -s -w -X github.com/vs4vijay/vizix/pkg/version.SemVer={{.Version}} -X=github.com/vs4vijay/vizix/pkg/version.GitCommit={{.Commit}} -X github.com/vs4vijay/vizix/pkg/version.BuildTime={{.Date}}
+  goos:
+    - darwin
+    - linux
+    - windows
 
 brews:
   - name: vizix
@@ -21,10 +25,6 @@ brews:
     folder: Formula
     description: "vizix - Software for fun and profit"
     skip_upload: false
-    goos:
-      - darwin
-      - linux
-      - windows
     install: |
       bin.install "vizix"
     test: |
