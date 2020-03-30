@@ -20,7 +20,7 @@ brews:
       name: homebrew-vizix
     url_template: "https://github.com/vs4vijay/vizix/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
     commit_author:
-      name: vs4vijay
+      name: Vijay Soni (vs4vijay)
       email: vs4vijay@gmail.com
     folder: Formula
     description: "vizix - Software for fun and profit"
@@ -29,6 +29,23 @@ brews:
       bin.install "vizix"
     test: |
       system "#{bin}/vizix version"
+
+nfpms:
+  - name_template: "{{ .ProjectName }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
+    homepage:  https://github.com/vs4vijay/vizix
+      description: "vizix - Software for fun and profit"
+    maintainer: Vijay Soni <vs4vijay@gmail.com>
+    license: MIT
+    formats:
+      - deb
+      - rpm
+
+snapcrafts:
+  - name_template: "{{ .ProjectName }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
+    summary: "vizix - Software for fun and profit"
+    grade: stable
+    confinement: classic
+    publish: true
 
 archives:
 - replacements:
@@ -39,7 +56,7 @@ archives:
     amd64: x86_64
 
 checksum:
-  name_template: 'checksums.txt'
+  name_template: "checksums.txt"
 
 snapshot:
   name_template: "{{ .Tag }}-next"
@@ -48,5 +65,5 @@ changelog:
   sort: asc
   filters:
     exclude:
-    - '^docs:'
-    - '^test:'
+    - "^docs:"
+    - "^test:"
