@@ -6,15 +6,20 @@ builds:
 - env:
   - CGO_ENABLED=0
   ldflags:
-    - -s -w -X github.com/vs4vijay/vizix/pkg/version.SemVer={{.Version}} -X=github.com/vs4vijay/vizix/pkg/version.GitCommit={{.Commit}} -X github.com/vs4vijay/vizix/pkg/version.BuildTime={{.Date}}
+    - -s -w
+    - -X=github.com/vs4vijay/vizix/pkg/version.SemVer={{ .Version }}
+    - -X=github.com/vs4vijay/vizix/pkg/version.GitCommit={{ .Commit }}
+    - -X=github.com/vs4vijay/vizix/pkg/version.BuildTime={{ .Date }}
   goos:
     - darwin
     - linux
     - windows
+  goarch:
+    - amd64
+    - "386"
 
 brews:
   - name: vizix
-    goarm: 6
     github:
       owner: vs4vijay
       name: homebrew-vizix
@@ -31,7 +36,7 @@ brews:
       system "#{bin}/vizix version"
 
 nfpms:
-  - name_template: "{{ .ProjectName }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
+  - file_name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
     homepage:  https://github.com/vs4vijay/vizix
     description: "vizix - Software for fun and profit"
     maintainer: Vijay Soni <vs4vijay@gmail.com>
@@ -41,7 +46,7 @@ nfpms:
       - rpm
 
 #snapcrafts:
-#  - name_template: "{{ .ProjectName }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
+#  - name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
 #    summary: "vizix"
 #    description: "vizix - Software for fun and profit"
 #    grade: stable
