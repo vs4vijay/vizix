@@ -194,6 +194,7 @@ on:
 ```shell script
 brew install vizix
 brew info vizix
+brew reinstall vizix --force
 ```
 
 - Manual Build

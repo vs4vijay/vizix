@@ -6,7 +6,7 @@ builds:
 - env:
   - CGO_ENABLED=0
   ldflags:
-    - -s -w -X github.com/vs4vijay/vizix/pkg/version.version={{.Version}} -X=github.com/vs4vijay/vizix/pkg/version.GitCommit={{.Commit}} -X github.com/vs4vijay/vizix/pkg/version.BuildDate={{.Date}}
+    - -s -w -X github.com/vs4vijay/vizix/pkg/version.SemVer={{.Version}} -X=github.com/vs4vijay/vizix/pkg/version.GitCommit={{.Commit}} -X github.com/vs4vijay/vizix/pkg/version.BuildTime={{.Date}}
 
 brews:
   - name: vizix
