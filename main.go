@@ -6,21 +6,19 @@ import (
 
 	"github.com/vs4vijay/vizix/cmd"
 
-	log "github.com/sirupsen/logrus"
 	"github.com/getsentry/sentry-go"
+	log "github.com/sirupsen/logrus"
 )
 
-var SENTRY_DSN = os.Getenv("SENTRY_DSN")
+var SentryDsn = os.Getenv("SENTRY_DSN")
 
 func main() {
-	err := sentry.Init(sentry.ClientOptions{
-		Dsn: SENTRY_DSN,
-	})
-	if err != nil {
+	if err := sentry.Init(sentry.ClientOptions{Dsn: SentryDsn}); err != nil {
 		log.Fatalf("sentry.Init: %s", err)
 	}
 
-	sentry.CaptureMessage("Sentry ran")
+	defer sentry.Flush(2 * time.Second)
+	sentry.CaptureMessage("Sentry works!")
 
 	if err := cmd.RootCmd.Execute(); err != nil {
 		log.Error(err)
