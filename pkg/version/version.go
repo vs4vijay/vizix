@@ -29,7 +29,7 @@ func getVersion() string {
 	if BuildTime == "" {
 		return SemVer
 	}
-	return SemVer + "+" + BuildTime
+	return fmt.Sprintf("%s+%s", SemVer, BuildTime)
 }
 
 func New() *Version {

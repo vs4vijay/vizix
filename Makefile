@@ -17,9 +17,6 @@ OS_LIST		:= darwin linux windows
 ARCH 		:= `uname -m`
 ARCH_LIST	:= 386 amd64
 
-.PHONY: default
-default: info
-
 .PHONY: info
 info:
 	@echo "info..."
@@ -39,7 +36,7 @@ test:
 
 .PHONY: build
 build: info
-	GOOS=darwin GOARCH=386 go build -v -ldflags "$(LDFLAGS)"
+	GOOS="${OS}" GOARCH="${ARCH}" go build -v -ldflags "$(LDFLAGS)"
 
 .PHONY: build-all
 build-all:
