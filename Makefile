@@ -29,17 +29,22 @@ info:
 	@echo "Build Time:       	${BUILD_TIME}"
 	@echo ""
 
-.PHONY: fmt
-fmt:
-	gofmt -l -w .
+
+.PHONY: format
+format:
+#	gofmt -l -w .
+	goimports -l -w .
+
 
 .PHONY: test
 test:
 	@echo "TODO"
 
+
 .PHONY: build
 build: info
 	GOOS=darwin GOARCH=386 go build -v -ldflags "$(LDFLAGS)"
+
 
 .PHONY: build-all
 build-all:
@@ -50,13 +55,16 @@ build-all:
 		done \
 	done
 
+
 .PHONY: release-dry-run
 release-dry-run:
 	goreleaser --snapshot --skip-publish --rm-dist
 
+
 .PHONY: release-using-gorelease
 release-using-gorelease:
 	goreleaser --rm-dist
+
 
 .PHONY: clean
 clean:
