@@ -1,9 +1,19 @@
 # vizix
 
+[![Release](https://github.com/vs4vijay/vizix/workflows/Release/badge.svg)](https://github.com/vs4vijay/vizix/releases)
+[![Go Report Card](https://goreportcard.com/badge/github.com/vs4vijay/vizix)](https://goreportcard.com/report/github.com/vs4vijay/vizix)
+[![Maintainability](https://api.codeclimate.com/v1/badges/ef8ddc6dc9dc972a7968/maintainability)](https://codeclimate.com/github/vs4vijay/vizix/maintainability)
+
 ## Getting Started
 
 ```console
 go get github.com/vs4vijay/vizix
+```
+
+OR
+
+```console
+brew install vs4vijay/vizix/vizix
 ```
 
 ---
@@ -13,6 +23,14 @@ go get github.com/vs4vijay/vizix
 ```console
 go run main.go
 ```
+
+---
+
+### Guidelines
+
+- Prefer `goimports` then `gofmt`: go get golang.org/x/tools/cmd/goimports
+- https://github.com/golang/go/wiki/CodeReviewComments
+-
 
 ---
 
@@ -227,7 +245,22 @@ brew update
 brew upgrade vizix
 ```
 
+### Deployment
+- Fly:
+- OpenShift: https://manage.openshift.com/
 
+
+### Badges
+
+- ![Release](https://github.com/vs4vijay/vizix/workflows/Release/badge.svg) - `![Release](https://github.com/vs4vijay/vizix/workflows/Release/badge.svg)`
+
+
+### 3rd Party Integrations
+
+- HoundCI
+- https://codeclimate.com/
+- https://codecov.io/
+- https://github.com/NickeManarin/ScreenToGif
 
 
 ---
@@ -240,5 +273,9 @@ GO111MODULE=on
 GOPROXY=https://gocenter.io
 CGO_ENABLED=0
 
+<<<<<<< Updated upstream
+=======
+GOARCH=wasm GOOS=js go build -o app.wasm
+>>>>>>> Stashed changes
 
 ```
