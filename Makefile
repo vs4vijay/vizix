@@ -56,7 +56,7 @@ test:
 
 .PHONY: build
 build: info
-	GOOS=darwin GOARCH=386 go build -v -ldflags "$(LDFLAGS)"
+	GOOS="${OS}" GOARCH="${ARCH}" go build -v -ldflags "$(LDFLAGS)"
 
 
 .PHONY: build-all
