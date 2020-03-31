@@ -17,8 +17,16 @@ OS_LIST		:= darwin linux windows
 ARCH 		:= `uname -m`
 ARCH_LIST	:= 386 amd64
 
-.PHONY: default
-default: info
+
+print-%:
+	@echo $* = $($*)
+
+
+.PHONY: tools
+tools:
+	go get -u golang.org/x/tools/cmd/goimports
+	go get -u golang.org/x/lint/golint
+
 
 .PHONY: info
 info:
@@ -34,6 +42,11 @@ info:
 format:
 #	gofmt -l -w .
 	goimports -l -w .
+
+
+.PHONY: lint
+format:
+	golint .
 
 
 .PHONY: test

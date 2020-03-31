@@ -28,7 +28,8 @@ go run main.go
 
 ### Guidelines
 
-- Prefer `goimports` then `gofmt`: go get golang.org/x/tools/cmd/goimports
+- Prefer `goimports` then `gofmt`
+- Use `golint` for style mistakes
 - https://github.com/golang/go/wiki/CodeReviewComments
 -
 
@@ -86,6 +87,11 @@ bye := make(chan os.Signal, 1)
 signal.Notify(bye, os.Interrupt, syscall.SIGTERM)
 <-bye
 ```
+
+### Signals
+- signal.Notify(s1, syscall.SIGWINCH)
+- signal.Ignore(syscall.SIGINT)
+- signal.Stop(s1)
 
 ### Context
 ```golang
@@ -257,10 +263,18 @@ brew upgrade vizix
 
 ### 3rd Party Integrations
 
+- Renovate Bot
 - HoundCI
-- https://codeclimate.com/
+- Kodiak
 - https://codecov.io/
+- https://codeclimate.com/
 - https://github.com/NickeManarin/ScreenToGif
+- Sentry
+
+
+### Git Hooks
+
+- commit - go mod tidy
 
 
 ---
