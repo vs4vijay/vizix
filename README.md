@@ -10,10 +10,16 @@
 go get github.com/vs4vijay/vizix
 ```
 
-OR
+OR (Via **Homebrew**)
 
 ```console
 brew install vs4vijay/vizix/vizix
+```
+
+OF (Via **Installer Script**)
+
+```console
+curl -fsSL https://raw.githubusercontent.com/vs4vijay/vizix/vizix/scripts/install.sh | bash
 ```
 
 ---
@@ -31,7 +37,6 @@ go run main.go
 - Prefer `goimports` then `gofmt`
 - Use `golint` for style mistakes
 - https://github.com/golang/go/wiki/CodeReviewComments
--
 
 ---
 
@@ -48,6 +53,8 @@ go build
 createCmd.MarkFlagRequired("secret")
 ```
 
+---
+
 ### Logging
 ```golang
 log.SetFormatter(&log.TextFormatter{ForceColors: true})
@@ -55,6 +62,7 @@ log.SetOutput(colorable.NewColorableStdout())
 ```
 - Log Verbosity: `cmd.PersistentFlags().CountVarP(&verbosity, "verbosity", "v", "set verbosity")`
 
+---
 
 ### Linting
 - gofmt
@@ -62,12 +70,7 @@ log.SetOutput(colorable.NewColorableStdout())
 - golint
 - go vet
 
-
-### Git Hooks
-```bash
-git config core.hooksPath .
-```
-
+---
 
 ### Makefile
 ```bash
@@ -79,8 +82,14 @@ tools:
 	go get github.com/matm/gocov-html
 	go get github.com/tools/godep
 	go get github.com/mitchellh/gox
+
+- `make test-lint`: runs linter/style checks
+- `make test-unit`: runs basic unit tests
+- `make test`: runs all of the above
+
 ```
 
+---
 
 ### Channels
 ```golang
@@ -89,10 +98,65 @@ signal.Notify(bye, os.Interrupt, syscall.SIGTERM)
 <-bye
 ```
 
+---
+
 ### Signals
 - signal.Notify(s1, syscall.SIGWINCH)
 - signal.Ignore(syscall.SIGINT)
 - signal.Stop(s1)
+```go
+sigs := make(chan os.Signal, 1)
+done := make(chan bool, 1)
+
+signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
+
+go func() {
+    sig := <-sigs
+    fmt.Println(sig)
+    done <- true
+}()
+
+fmt.Println("awaiting signal")
+<-done
+fmt.Println("exiting")
+```
+
+---
+
+### Timers and Tickers
+
+```go
+
+// Timer
+timer := time.NewTimer(2 * time.Second)
+<-timer.C
+fmt.Println("Timer 1 fired")
+
+
+// Ticker
+ticker := time.NewTicker(2 * time.Second)
+done := make(chan bool)
+
+go func() {
+    for {
+        select {
+        case <-done:
+            return
+        case t := <-ticker.C:
+            fmt.Println("Tick at", t)
+        }
+    }
+}()
+
+time.Sleep(10 * time.Second)
+ticker.Stop()
+done <- true
+fmt.Println("Ticker stopped")
+
+```
+
+
+---
 
 ### Context
 ```golang
@@ -102,6 +166,7 @@ ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 defer cancel()
 ```
 
+---
 
 ### Mutex
 ```golang
@@ -112,25 +177,36 @@ defer users.mutex.Unlock()
 append(users, user)
 ```
 
+---
 
 ### Testing
-includes following suite of tests.
-- `make test-lint`: runs linter/style checks
-- `make test-unit`: runs basic unit tests
-- `make test`: runs all of the above
+- Table Testing
 
+---
 
 ### JSON
 ```golang
 json.NewEncoder(writer).Encode(todos)
 ```
 
+---
 
 ### System Exec
 ```golang
+
+binary, lookErr := exec.LookPath("ls")
+
+// Spawing
 out, err := exec.Command("ls").Output()
+
+
+// Using Syscall
+args := []string{"ls", "-a", "-l", "-h"}
+env := os.Environ()
+execErr := syscall.Exec(binary, args, env)
 ```
 
+---
 
 ### OS Detection:
 
@@ -163,6 +239,7 @@ http.ListenAndServe(address, router)
 ```
 - To get params - `mux.Vars(request)`
 
+---
 
 ### Bash:
 ```bash
@@ -172,6 +249,7 @@ try() { "$@" || die "failed executing: $*"; }
 log() { echo "--> $*"; }
 ```
 
+---
 
 ### Dockerization:
 
@@ -195,6 +273,7 @@ docker volume prune
 - Remove Everything: `docker system prune -a --volumes`
 - Kill All Running Containers: `docker kill $(docker ps -q)`
 
+---
 
 ### Build and Distribute
 
@@ -259,19 +338,20 @@ brew update
 brew upgrade vizix
 ```
 
+---
+
 ### Deployment
-<<<<<<< HEAD
 - Fly:
 - OpenShift: https://manage.openshift.com/
 
+---
 
 ### Badges
-
 - ![Release](https://github.com/vs4vijay/vizix/workflows/Release/badge.svg) - `![Release](https://github.com/vs4vijay/vizix/workflows/Release/badge.svg)`
 
+---
 
 ### 3rd Party Integrations
-
 - Renovate Bot
 - HoundCI
 - Kodiak
@@ -280,20 +360,13 @@ brew upgrade vizix
 - https://github.com/NickeManarin/ScreenToGif
 - Sentry
 
+---
 
 ### Git Hooks
-=======
-
-- Fly:
-- OpenShift: https://manage.openshift.com/
->>>>>>> d4c567595dbb3254fd957c43619876a4fea01260
-
+```bash
+git config core.hooksPath .
+```
 - commit - go mod tidy
-
-### Badges
-
-- ![Release](https://github.com/srijanone/vega/workflows/Release/badge.svg) - `![Release](https://github.com/srijanone/vega/workflows/Release/badge.svg)`
--
 
 ---
 
@@ -305,12 +378,11 @@ GO111MODULE=on
 GOPROXY=https://gocenter.io
 CGO_ENABLED=0
 
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-=======
 GOARCH=wasm GOOS=js go build -o app.wasm
->>>>>>> Stashed changes
 
-=======
->>>>>>> d4c567595dbb3254fd957c43619876a4fea01260
+wget: wget -q -O - https://raw.githubusercontent.com/rancher/k3d/master/install.sh | TAG=v1.3.4 bash
+curl: curl -s https://raw.githubusercontent.com/rancher/k3d/master/install.sh | TAG=v1.3.4 bash
+
+curl -sfL https://get.k3s.io | sh -
+
 ```
