@@ -3,7 +3,7 @@ module github.com/vs4vijay/vizix
 go 1.14
 
 require (
-	github.com/getsentry/sentry-go v0.5.1
+	github.com/getsentry/sentry-go v0.6.0
 	github.com/kataras/iris/v12 v12.1.8
 	github.com/mattn/go-colorable v0.1.6 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
