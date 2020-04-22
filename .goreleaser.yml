@@ -24,7 +24,7 @@ brews:
   - name: vizix
     github:
       owner: vs4vijay
-      name: homebrew-vizix
+      name: homebrew-tap
     url_template: "https://github.com/vs4vijay/vizix/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
     commit_author:
       name: Vijay Soni (vs4vijay)
