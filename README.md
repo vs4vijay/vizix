@@ -4,7 +4,6 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/vs4vijay/vizix)](https://goreportcard.com/report/github.com/vs4vijay/vizix)
 [![Maintainability](https://api.codeclimate.com/v1/badges/ef8ddc6dc9dc972a7968/maintainability)](https://codeclimate.com/github/vs4vijay/vizix/maintainability)
 
-
 ## Getting Started
 
 ```console
