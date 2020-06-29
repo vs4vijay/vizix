@@ -15,7 +15,7 @@ require (
 	github.com/onsi/gomega v1.9.0 // indirect
 	github.com/sergi/go-diff v1.1.0 // indirect
 	github.com/sirupsen/logrus v1.5.0
-	github.com/spf13/cobra v0.0.7
+	github.com/spf13/cobra v1.0.0
 	github.com/spf13/viper v1.6.2
 	github.com/valyala/fasthttp v1.9.0 // indirect
 	golang.org/x/net v0.0.0-20200226121028-0de0cce0169b // indirect
