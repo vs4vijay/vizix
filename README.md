@@ -30,6 +30,12 @@ curl -fsSL https://raw.githubusercontent.com/vs4vijay/vizix/vizix/scripts/instal
 go run main.go
 ```
 
+- Auto Reload:
+  - `Air` - https://github.com/cosmtrek/air
+  - WatchMan: https://github.com/facebook/watchman
+  - modd: https://github.com/cortesi/modd
+  - entr: http://eradman.com/entrproject
+  - https://github.com/codegangsta/gin
 ---
 
 ### Guidelines
@@ -91,11 +97,122 @@ tools:
 
 ---
 
+### I/O
+
+```golang
+
+s := bufio.Scanner(os.Stdin)
+s.Scan()
+
+// OR
+
+scanner := bufio.NewScanner(os.Stdin)
+for scanner.Scan() {
+  break
+}
+if err := scanner.Err(); err != nil {
+  panic(err)
+}
+
+// OR
+
+serverData, err := bufio.NewReader(connection).ReadString('\n')
+
+```
+
+---
+
+### JSON / Marshalling / Un-marshalling
+
+```golang
+
+// Marshalling 1
+j, err := json.Marshal(p)
+
+// Marshalling 2
+json.NewEncoder(writer).Encode(todos)
+
+// Un-marshalling 1
+body := make(map[string]interface{})
+bodyBytes, _ := ioutil.ReadAll(request.Body)
+err := json.Unmarshal(bodyBytes, &body)
+
+// Un-marshalling 2
+body := make(map[string]interface{})
+err := json.NewDecoder(request.Body).Decode(&body)
+
+```
+
+---
+
+```golang
+
+// Make HTTP Call
+
+payloadBytes, err := json.Marshal(payload)
+if err != nil {
+    return nil, err
+}
+
+client = &http.Client{
+	Timeout: 10 * time.Second,
+}
+request, err := http.NewRequest(method, url, bytes.NewBuffer(payloadBytes))
+
+request.Header.Add(echo.HeaderContentType, echo.MIMEApplicationJSON)
+request.Header.Add("Authorization", "Bearer " + apiKey)
+response, err := client.Do(request)
+if err != nil {
+    return nil, err
+}
+
+defer response.Body.Close()
+body, err := ioutil.ReadAll(response.Body)
+if err != nil {
+    return nil, err
+}
+
+string(body)
+
+// Convert Payload - I
+values := map[string]string{"username": username, "password": password}
+dataBytes, _ := json.Marshal(values)
+resp, err := http.Post(authAuthenticatorUrl, "application/json", bytes.NewBuffer(dataBytes))
+
+// Convert Payload - II, Mainly for Streaming
+buf := new(bytes.Buffer)
+json.NewEncoder(buf).Encode(body)
+resp, err := http.Post(authAuthenticatorUrl, "application/json", buf)
+
+
+// Ready Body
+body, err := ioutil.ReadAll(resp.Body)
+
+// Read Body to Object
+var result map[string]interface{}
+json.NewDecoder(resp.Body).Decode(&result)
+
+```
+
+---
+
 ### Channels
 ```golang
 bye := make(chan os.Signal, 1)
 signal.Notify(bye, os.Interrupt, syscall.SIGTERM)
 <-bye
+```
+
+### WaitGroups
+```golang
+var wg sync.WaitGroup
+
+wg.Add(1)
+wg.Done()
+
+wg.Wait()
+
+
 ```
 
 ---
@@ -104,7 +221,7 @@ signal.Notify(bye, os.Interrupt, syscall.SIGTERM)
 - signal.Notify(s1, syscall.SIGWINCH)
 - signal.Ignore(syscall.SIGINT)
 - signal.Stop(s1)
-```go
+```golang
 sigs := make(chan os.Signal, 1)
 done := make(chan bool, 1)
 
@@ -125,7 +242,7 @@ fmt.Println("exiting")
 
 ### Timers and Tickers
 
-```go
+```golang
 
 // Timer
 timer := time.NewTimer(2 * time.Second)
@@ -155,7 +272,6 @@ fmt.Println("Ticker stopped")
 
 ```
 
-
 ---
 
 ### Context
@@ -164,6 +280,36 @@ ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 OR
 ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 defer cancel()
+
+// Example 2
+
+ctx := context.Background()
+ctx, cancel := context.WithCancel(ctx)
+
+go func() {
+    s := bufio.Scanner(os.Stdin)
+    s.Scan()
+    cancel()
+}()
+
+// Example 3
+time.AfterFunc(time.Second, cancel)
+
+// OR
+ctx := context.Background()
+ctx, cancel := context.WithTimeout(ctx, time.Second)
+defer cancel() // "deadline exceeded", but "cancel()" will cancel
+
+// viz
+func viz(ctx context.Context, d time.Duration, msg string) {
+    select {
+    case <- time.After(d):
+        fmt.Println(msg)
+    case <- ctx.Done()
+        fmt.Errorf(ctx.Err())
+    }
+}
+
 ```
 
 ---
@@ -181,13 +327,6 @@ append(users, user)
 
 ### Testing
 - Table Testing
-
----
-
-### JSON
-```golang
-json.NewEncoder(writer).Encode(todos)
-```
 
 ---
 
@@ -221,11 +360,25 @@ execErr := syscall.Exec(binary, args, env)
 - `gin` -
 - `iris` -
 - `echo` -
+- `beego`
 
 #### Using net/http:
 
 ```golang
-http.Handle("/", server) // or http.HandleFunc("/", someFunc)
+
+// Option-I:
+
+func someFunc(w http.ResponseWriter, r *http.Request) {
+    w.write([]byte("Hey"))
+    // fmt.Fprintln(w, "Hey")
+}
+
+http.HandleFunc("/", someFunc)
+http.ListenAndServe(address, nil)
+
+// Option-II:
+
+http.Handle("/", server)
 http.ListenAndServe(address, nil)
 ```
 - server should have Handler interface, which should have ServeHTTP method
@@ -238,6 +391,40 @@ router.HandleFunc("/", Index)
 http.ListenAndServe(address, router)
 ```
 - To get params - `mux.Vars(request)`
+
+---
+
+### Graceful Shutdown
+
+```golang
+
+// Trap sigterm or interrupt to gracefully shutdown the server
+sigChan := make(chan os.Signal, 1)
+signal.Notify(sigChan, os.Interrupt)
+signal.Notify(sigChan, os.Kill)
+
+// Block until a signal is received.
+sig := <-sigChan
+logger.Printf("Got signal: %v, shutting down the server\n", sig)
+
+// gracefully shutdown the server, waiting max 30 seconds for current operations to complete
+ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
+srv.Shutdown(ctx)
+
+// OR
+
+quit := make(chan os.Signal)
+signal.Notify(quit, os.Interrupt)
+<-quit
+
+ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+defer cancel()
+if err := e.Shutdown(ctx); err != nil {
+		e.Logger.Fatal(err)
+	}
+}
+
+```
 
 ---
 
@@ -275,7 +462,14 @@ docker volume prune
 
 ---
 
-### Build and Distribute
+### Build Binary
+
+- Build Tags: `// +build pro`
+- go build -tags pro
+
+---
+
+### Distribute Binaries
 
 - Manual Build
 ```bash
