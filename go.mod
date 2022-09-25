@@ -1,6 +1,6 @@
 module github.com/vs4vijay/vizix
 
-go 1.14
+go 1.19
 
 require (
 	github.com/0xAX/notificator v0.0.0-20191016112426-3962a5ea8da1 // indirect
