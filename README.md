@@ -38,6 +38,14 @@ go run main.go
   - https://github.com/codegangsta/gin
 ---
 
+### Contributing Guidelines
+
+Before submitting a pull request, please ensure that you have run tests and lint checks locally. This will help in making the CI checks smooth and faster.
+
+#### PR Gate Checks
+
+When you submit a pull request, it will trigger automated checks for code linting, running unit tests, and checking for merge conflicts. These checks are in place to maintain the quality and integrity of the codebase. Please make sure your code passes these checks before submitting a PR.
+
 ### Guidelines
 
 - Prefer `goimports` then `gofmt`
