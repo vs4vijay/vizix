@@ -83,6 +83,7 @@ dw 0xaa55
 - https://s-matyukevich.github.io/raspberry-pi-os/
 - https://www.fysnet.net/osdesign_book_series.htm
 - https://pages.cs.wisc.edu/~remzi/OSTEP/
+- https://operating-system-in-1000-lines.vercel.app/en
 
 
 ### Hardware
