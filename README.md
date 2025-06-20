@@ -84,6 +84,7 @@ dw 0xaa55
 - https://www.fysnet.net/osdesign_book_series.htm
 - https://pages.cs.wisc.edu/~remzi/OSTEP/
 - https://operating-system-in-1000-lines.vercel.app/en
+- https://github.com/krustowski/rou2exOS
 
 
 ### Hardware
